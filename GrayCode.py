@@ -137,11 +137,11 @@ def path_wheel(seq):
     
     # sectors per digit
     for i in range(len(colors)):
+        paths[i] = []
         color_val = colors[i]
         boundaries_color = boundaries[i]
         color = map_color(color_val) #TODO
         if (color != 'white'):
-            paths = []
             # inner circle
             #paths.append("M {} {} A {},{} 0 1,1 {},{} z".format(image_size/2 + radius_inner, image_size/2, radius_inner, radius_inner, image_size/2 - radius_inner, image_size/2))
             #paths.append("M {} {} A {},{} 0 1,1 {},{} z".format(image_size/2 - radius_inner, image_size/2, radius_inner, radius_inner, image_size/2 + radius_inner, image_size/2))
@@ -161,7 +161,7 @@ def map_color(value):
 
 
 
-no_bits = 15
+no_bits = 5
 seq_bin = generate_binary(no_bits)
 seq_gray = generate_gray(no_bits)
 p = path_wheel(seq_gray)
