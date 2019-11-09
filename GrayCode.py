@@ -14,13 +14,13 @@ import time
 def generate_binary(n):
      # creates binary numbers with 0 and 255 as values
     binary = [format(i, "0{}b".format(n)) for i in range(2**n)]
-    binary = [[int(i)*255 for i in l] for l in binary]
+    binary = [[int(i) for i in l] for l in binary]
     return np.uint8(binary)
 
 def generate_gray(n):
     # creates binary Gray codes with 0 and 255 as values
     gray = [format(i^(i>>1),"0{}b".format(n)) for i in range(2**n)]
-    gray = [[int(i)*255 for i in l] for l in gray]
+    gray = [[int(i) for i in l] for l in gray]
     return np.uint8(gray)    
 
 
@@ -75,9 +75,11 @@ def find_boundaries(seq, color_val):
         end = 0
         for j in range(no_values):
             if seq[j,i] == color_val:
+                # if color switch has happened -> beginning
                 if seq[(j-1)%(no_values), i] != color_val:
-                    begin = j
-                if seq[(j+1)%(no_values), i] != color_val:
+                    begin = j               
+                # if color switch will happen -> ending
+                if (seq[(j+1)%(no_values), i] != color_val) or (seq[(j+1)%(no_values), i] == 0):
                     end = j+1
                     vals.append((i, begin, end))
     return vals
@@ -108,8 +110,20 @@ def path_annular_sector(angle_begin, angle_end,
     path += "A {},{} 0 0,0 {},{} z".format(radius_small, radius_small, x_0, y_0)
     return(path)
 
-def wheel_svg(seq, name):
-    digits = np.unique(seq)
+
+def create_svg(svg_path, name):
+    preamble = '<?xml version="1.0" encoding="utf-8" ?><svg baseProfile="full" height="{}px" version="1.1" width="{}px" xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xlink="http://www.w3.org/1999/xlink"><defs /><path d='
+    preamble = preamble.format("1100", "1100")
+    postamble = ' fill="black" stroke="red" stroke-width="0" /></svg>'
+    svg_path_flat = '"' + "".join(svg_path) + '"'
+    with open(name, 'w') as file:
+        file.write(preamble)
+        file.write(svg_path_flat)
+        file.write(postamble)
+
+
+def path_wheel(seq):
+    colors = np.unique(seq)
     no_bits = len(seq[0])
     no_values = len(seq)
     radius_inner = 100
@@ -118,52 +132,37 @@ def wheel_svg(seq, name):
     image_size = 2*(no_bits*radius_sector+radius_inner)
 
     boundaries = []
-    dwg = svgwrite.Drawing(filename = name, size = (image_size, image_size))
-    for digit in digits:
-        boundaries.append(find_boundaries(seq, digit))
+    for color_val in colors:
+        boundaries.append(find_boundaries(seq, color_val))
     
     # sectors per digit
-    for i in range(len(digits)):
-        digit = digits[i]
-        boundaries_digit = boundaries[i]
-        color = map_color(digit) #TODO
-
-        paths = []
-        # inner circle
-        # paths.append("M {} {} A {},{} 0 1,1 {},{} z".format(image_size/2 + radius_inner, image_size/2, radius_inner, radius_inner, image_size/2 - radius_inner, image_size/2))
-        # paths.append("M {} {} A {},{} 0 1,1 {},{} z".format(image_size/2 - radius_inner, image_size/2, radius_inner, radius_inner, image_size/2 + radius_inner, image_size/2))
-        start = time.time()
-        if (color != "white"):
-            for sector in boundaries_digit:
+    for i in range(len(colors)):
+        color_val = colors[i]
+        boundaries_color = boundaries[i]
+        color = map_color(color_val) #TODO
+        if (color != 'white'):
+            paths = []
+            # inner circle
+            #paths.append("M {} {} A {},{} 0 1,1 {},{} z".format(image_size/2 + radius_inner, image_size/2, radius_inner, radius_inner, image_size/2 - radius_inner, image_size/2))
+            #paths.append("M {} {} A {},{} 0 1,1 {},{} z".format(image_size/2 - radius_inner, image_size/2, radius_inner, radius_inner, image_size/2 + radius_inner, image_size/2))
+            for sector in boundaries_color:
                 radius_small = sector[0]*radius_sector+radius_inner
                 radius_large = radius_small + radius_sector
                 angle_begin = 2*np.pi*sector[1]/(no_values)
                 angle_end = 2*np.pi*(sector[2])/(no_values)
                 paths.append(path_annular_sector(angle_begin, angle_end, radius_small, radius_large, image_size/2, image_size/2))
-
-            dwg.add(dwg.path(paths, fill=color, stroke="red", stroke_width="0"))
-            print(time.time() - start)
-            t = dwg.get_xml()
-            print(time.time() - start)
-
-    dwg.save()
-    print(time.time() - start)
-
-    return t
+    return paths
 
 def map_color(value):
-    if value == 255:
+    if value == 1:
         return "black"
     else:
-        return "white"
+        return "yellow"
 
 
 
-no_bits = 12
-seq = generate_binary(no_bits)
-
-t = wheel_svg(seq, "testSVG.svg")
-with open("test.svg", 'w') as file:
-    file.write(t)
-#wheel_png(seq, "8bitBW.png")
-
+no_bits = 15
+seq_bin = generate_binary(no_bits)
+seq_gray = generate_gray(no_bits)
+p = path_wheel(seq_gray)
+create_svg(p, "test.svg")
