@@ -130,14 +130,13 @@ def path_wheel(seq):
     radius_sector = 6
 
     image_size = 2*(no_bits*radius_sector+radius_inner)
-
     boundaries = []
     for color_val in colors:
         boundaries.append(find_boundaries(seq, color_val))
     
     # sectors per digit
     for i in range(len(colors)):
-        paths[i] = []
+        paths = []
         color_val = colors[i]
         boundaries_color = boundaries[i]
         color = map_color(color_val) #TODO
@@ -161,11 +160,7 @@ def map_color(value):
 
 
 
-<<<<<<< HEAD
 no_bits = 10
-=======
-no_bits = 5
->>>>>>> 73173aad4c3c440e2786f794d0eb167206513680
 seq_bin = generate_binary(no_bits)
 seq_gray = generate_gray(no_bits)
 p = path_wheel(seq_gray)

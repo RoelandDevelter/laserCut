@@ -3,8 +3,8 @@ import numpy as np
 
 drawing = svgwrite.Drawing(filename = "sunflower.svg", size = (500, 500))
 
-seeds = 1000
-cst = 3.3
+seeds = 2000
+cst = 3.4
 angle = np.pi * 137.5 / 180
 center = 250
 
