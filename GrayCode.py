@@ -126,8 +126,8 @@ def path_wheel(seq):
     colors = np.unique(seq)
     no_bits = len(seq[0])
     no_values = len(seq)
-    radius_inner = 100
-    radius_sector = 30
+    radius_inner = 1000
+    radius_sector = 6
 
     image_size = 2*(no_bits*radius_sector+radius_inner)
 
@@ -161,7 +161,7 @@ def map_color(value):
 
 
 
-no_bits = 15
+no_bits = 10
 seq_bin = generate_binary(no_bits)
 seq_gray = generate_gray(no_bits)
 p = path_wheel(seq_gray)
