@@ -2,3 +2,4 @@
 * flip horizontally
 * balanced gray code
 * allow multiple colour writing
+*object oriented Gray code
