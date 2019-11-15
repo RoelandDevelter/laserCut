@@ -164,4 +164,4 @@ no_bits = 10
 seq_bin = generate_binary(no_bits)
 seq_gray = generate_gray(no_bits)
 p = path_wheel(seq_gray)
-create_svg(p, "test.svg")
+create_svg(p, "images/test.svg")
