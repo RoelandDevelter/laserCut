@@ -8,24 +8,27 @@ import timeit
 # [np.binary_repr(number) for number in numbers]
 
 
-def generate_binary(n):
+def generate_code(no_bits, type = 'incremental'):
     # creates standard binary numbers
-    return [format(number, 'b').zfill(n) for number in range(0, 2**n, 1)]
+    if type == "gray":
+        code = [list(format(number ^ (number >> 1), 'b').zfill(no_bits)) for number in range(2**no_bits)]
+    elif type == 'incremental':
+        code = [list(format(number, 'b').zfill(no_bits)) for number in range(2**no_bits)]
+    return np.array(code) == '1'   # convert to boolean array
 
 
-def generate_gray(n):
-    # creates gray binary numbers
-    return [format(number ^ (number >> 1), 'b').zfill(n) for number in range(0, 2**n, 1)]
+def detect_edges(code):
+    # axis 0 == 'vertical', axis 1 == 'horizontal'
+    # returns edge_x, edge_y
+    return np.logical_xor(code, np.roll(code, 1, axis = 1)), np.logical_xor(code, np.roll(code, 1, axis = 0))
 
 
 def main():
     # print(timeit.timeit("generate_gray_np(8)", setup="from __main__ import generate_gray_np", number = 20))
     # print(timeit.timeit("generate_gray(8)", setup = "from __main__ import generate_gray", number = 20))
-    code = np.array(generate_gray(3))
-    print(*code)
-    edge_x = np.logical_xor(code, np.roll(code, 1, axis = 0)) # axis 0 == 'vertical'
-    edge_y = np.logical_xor(code, np.roll(code, 1, axis = 1)) # axis 1 == 'horizontal'
-    print(edge_x)
+    code = generate_code(5)
+    edge_x, edge_y = detect_edges(code)
+
 
 if __name__ == "__main__":
     main()
