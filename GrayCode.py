@@ -10,7 +10,6 @@ from PIL import Image, ImageDraw
 import svgwrite
 import time
 
-
 def generate_binary(n):
      # creates binary numbers with 0 and 255 as values
     binary = [format(i, "0{}b".format(n)) for i in range(2**n)]
@@ -65,7 +64,6 @@ def wheel_png(seq, name = "test"):
     img.save("{}_wheel_{}.png".format(name,no_bits), "PNG")
     return img
 
-
 def find_boundaries(seq, color_val):
     vals = []
     no_values = len(seq)
@@ -110,7 +108,6 @@ def path_annular_sector(angle_begin, angle_end,
     path += "A {},{} 0 0,0 {},{} z".format(radius_small, radius_small, x_0, y_0)
     return(path)
 
-
 def create_svg(svg_path, name):
     preamble = '<?xml version="1.0" encoding="utf-8" ?><svg baseProfile="full" height="{}px" version="1.1" width="{}px" xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xlink="http://www.w3.org/1999/xlink"><defs /><path d='
     preamble = preamble.format("1100", "1100")
@@ -120,7 +117,6 @@ def create_svg(svg_path, name):
         file.write(preamble)
         file.write(svg_path_flat)
         file.write(postamble)
-
 
 def path_wheel(seq):
     colors = np.unique(seq)
