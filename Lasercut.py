@@ -1,6 +1,4 @@
 import numpy as np
-import timeit
-
 
 # things tried: np.vectorize(lambda number: format(number, 'b').zfill(n), numbers)
 # [bin(number) for number in numbers] -> not zero padded
@@ -8,19 +6,22 @@ import timeit
 # [np.binary_repr(number) for number in numbers]
 
 
-def generate_code(no_bits, type = 'incremental'):
-    # creates standard binary numbers
-    if type == "gray":
-        code = [list(format(number ^ (number >> 1), 'b').zfill(no_bits)) for number in range(2**no_bits)]
-    elif type == 'incremental':
+def generate_code(no_bits, type = 'natural'):
+    # generates codes. Lucal code does not add a different pattern
+    if type == 'natural':
         code = [list(format(number, 'b').zfill(no_bits)) for number in range(2**no_bits)]
+    elif type == 'gray':
+        code = [list(format(number ^ (number >> 1), 'b').zfill(no_bits)) for number in range(2**no_bits)]
     return np.array(code) == '1'   # convert to boolean array
 
 
 def detect_edges(code):
     # axis 0 == 'vertical', axis 1 == 'horizontal'
     # returns edge_x, edge_y
-    return np.logical_xor(code, np.roll(code, 1, axis = 1)), np.logical_xor(code, np.roll(code, 1, axis = 0))
+    edge_x = np.logical_xor(code, np.roll(code, 1, axis = 1))
+    edge_y = np.logical_xor(code, np.roll(code, 1, axis = 0))
+    # return coordinates
+    return edge_x, edge_y
 
 
 def main():
