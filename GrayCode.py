@@ -110,7 +110,7 @@ def path_annular_sector(angle_begin, angle_end,
 
 def create_svg(svg_path, name):
     preamble = '<?xml version="1.0" encoding="utf-8" ?><svg baseProfile="full" height="{}px" version="1.1" width="{}px" xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xlink="http://www.w3.org/1999/xlink"><defs /><path d='
-    preamble = preamble.format("1100", "1100")
+    preamble = preamble.format("305", "508") # dimensions laserbed
     postamble = ' fill="black" stroke="red" stroke-width="0" /></svg>'
     svg_path_flat = '"' + "".join(svg_path) + '"'
     with open(name, 'w') as file:
@@ -122,8 +122,8 @@ def path_wheel(seq):
     colors = np.unique(seq)
     no_bits = len(seq[0])
     no_values = len(seq)
-    radius_inner = 1000
-    radius_sector = 6
+    radius_inner = 20
+    radius_sector = 10
 
     image_size = 2*(no_bits*radius_sector+radius_inner)
     boundaries = []
@@ -157,7 +157,10 @@ def map_color(value):
 
 
 no_bits = 10
-seq_bin = generate_binary(no_bits)
+seq_nat = generate_binary(no_bits)
 seq_gray = generate_gray(no_bits)
-p = path_wheel(seq_gray)
-create_svg(p, "images/test.svg")
+p_gray_10 = path_wheel(seq_gray)
+p_nat_10 = path_wheel(seq_nat)
+
+create_svg(p_gray_10, "images/gray_10.svg")
+create_svg(p_nat_10, "images/nat_10.svg")

@@ -1,5 +1,5 @@
 from bitstring import BitArray
 
-c = BitArray('test')
+c = BitArray(521)
 
 print(c)
