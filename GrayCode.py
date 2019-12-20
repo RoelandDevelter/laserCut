@@ -109,23 +109,24 @@ def path_annular_sector(angle_begin, angle_end,
     return(path)
 
 def create_svg(svg_path, name):
-    preamble = '<?xml version="1.0" encoding="utf-8" ?><svg baseProfile="full" height="{}px" version="1.1" width="{}px" xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xlink="http://www.w3.org/1999/xlink"><defs /><path d='
-    preamble = preamble.format("305", "508") # dimensions laserbed
-    postamble = ' fill="black" stroke="red" stroke-width="0" /></svg>'
+    svg_begin = '<?xml version="1.0" encoding="utf-8" ?><svg baseProfile="full" height="{}px" version="1.1" width="{}px" xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xlink="http://www.w3.org/1999/xlink"><defs />'
+    svg_begin = svg_begin.format("305", "508") # dimensions laserbed
+    svg_end = '</svg>'
+    path_begin = '<path d='
+    path_end = ' fill="black" stroke="red" stroke-width="0" />'
+    circle =  '<circle cx="{}" cy="{}" r="{}" stroke="red" stroke-width="1" fill="none" />'.format(image_size/2, image_size/2, radius_inner+no_bits*radius_sector+radius_border)
     svg_path_flat = '"' + "".join(svg_path) + '"'
     with open(name, 'w') as file:
-        file.write(preamble)
+        file.write(svg_begin)
+        file.write(path_begin)
         file.write(svg_path_flat)
-        file.write(postamble)
+        file.write(path_end)
+        file.write(circle)
+        file.write(svg_end)
 
 def path_wheel(seq):
     colors = np.unique(seq)
-    no_bits = len(seq[0])
     no_values = len(seq)
-    radius_inner = 20
-    radius_sector = 10
-
-    image_size = 2*(no_bits*radius_sector+radius_inner)
     boundaries = []
     for color_val in colors:
         boundaries.append(find_boundaries(seq, color_val))
@@ -157,6 +158,12 @@ def map_color(value):
 
 
 no_bits = 10
+radius_inner = 20
+radius_sector = 10
+radius_border = 1
+
+image_size = 2*(no_bits*radius_sector+radius_inner + radius_border)
+
 seq_nat = generate_binary(no_bits)
 seq_gray = generate_gray(no_bits)
 p_gray_10 = path_wheel(seq_gray)

@@ -10,7 +10,7 @@ center = 125
 dot_radius = 2
 seeds = 1000
 
-for n in range(1,seeds+1):
+for n in range(4,seeds+1):
     x = center + cst * np.sqrt(n) * np.cos(n * angle)
     y = center + cst * np.sqrt(n) * np.sin(n * angle)
     drawing.add(drawing.circle(center = (x,y), r =dot_radius, fill = 'black'))
