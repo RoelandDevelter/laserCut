@@ -1,7 +1,7 @@
 import svgwrite
 import numpy as np
 
-angle = np.pi * 137.5 / 180
+angle = np.pi * 137.508 / 180
 
 drawing = svgwrite.Drawing(filename = "images/sunflower_laser.svg", size = (305, 508))
 
