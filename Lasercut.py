@@ -33,16 +33,13 @@ def generate_code(no_bits, type = 'natural'):
 
     Returns
     -------
-    The type of the return value
-        Can include a description of the return value.
-        Replace "Returns" with "Yields" if this function is a generator.
+    numpy array of the code
     """
     if type == 'natural':
         code = [list(format(number, 'b').zfill(no_bits)) for number in range(2**no_bits)]
     elif type == 'gray':
         code = [list(format(number ^ (number >> 1), 'b').zfill(no_bits)) for number in range(2**no_bits)]
-    return np.array(code, dtype = bool)
-
+    return np.array(code).astype(bool)
 
 def detect_edges(code):
     """ Detects edges on given code. 
@@ -98,8 +95,8 @@ def write_img(svg_path):
 
 
 def main():
-    code = generate_code(20, type = 'natural')
-    # edge_r, edge_theta = detect_edges(code)
+    code = generate_code(5, type = 'natural')
+    edge_r, edge_theta = detect_edges(code)
     print('breakpoint')
 
 

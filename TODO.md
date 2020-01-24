@@ -1,5 +1,5 @@
 * remap function: remaps values to rgb values
+* * allow multiple colour writing
 * balanced gray code
-* allow multiple colour writing
 * object oriented patterns
-* edge_x = (code ^ np.roll(code, shift = 1, axis = 0) for detecting the changing bit
+* investigate np.diff for edge detection
