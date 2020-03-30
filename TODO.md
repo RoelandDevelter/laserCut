@@ -3,3 +3,4 @@
 * balanced gray code
 * object oriented patterns
 * investigate np.diff for edge detection
+* test
